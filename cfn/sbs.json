@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Creates the backend resources for Grovepi IOT",
+    "Description": "Creates the AWS resources for Grovepi IOT",
     "Mappings" : {
         "RegionMap" : {
             "us-east-1" : { "S3hostedzoneID" : "Z3AQBSTGFYJSTF", "websiteendpoint" : "s3-website-us-east-1.amazonaws.com" },
