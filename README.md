@@ -1,6 +1,8 @@
 GrovePi Simple Sensors Setup Guide
 =======================================================
 
+Inspired by Amazon's Simple Beer Service project [link](https://github.com/awslabs/simplebeerservice)
+
 Simple Sensors is a cloud-connected Raspberry Pi that sends sensor data (temperature, humidity, sound levels and proximity) to an Amazon API Gateway endpoint. The API Gateway endpoint invokes an AWS Lambda function that writes sensor data to an Amazon DynamoDB table. A serverless static S3 website displays the data in real-time as it streams in through Amazon API Gateway and AWS Lambda.
 
 SBS Device Architecture
@@ -26,7 +28,7 @@ Before getting started, check to ensure you have the following components:
 Getting your AWS environment up and running.
 ==================
 
-1. Purchase a domain for your SBS website and create a new hosted zone associated with the domain.
+1. Purchase a domain for your website and create a new hosted zone associated with the domain.
 2. Launch the CloudFormation script include in the **cfn/** directory. Reference the hosted zone used in Step 1.
 3. Once completed, in the outputs of your CloudFormation stack, you will see the name of two DynamoDB tables. One, is the unit table used to hold the information about all SBS units in your fleet. The other, is the SBS data table. All sensor data from your SBS fleet is written into this table. Secondly, you will see the name of the three lambda functions in here as well. We will reference these names in the application files.
 4. In the SBS code base, you will need to change a few things:
@@ -34,7 +36,7 @@ Getting your AWS environment up and running.
   - *web/Gruntfile.js* -> find the task "publish" and replace with <S3_BUCKET> with your bucket name. Also, change the IAM profile from default to your profile name if required, as well as the default region.
   - *lambda/getSBSFleet, lambda/readSBSData, lambda/writeSBSData* -> Add in your DynamoDB table names to these files.
 5. Deploy your lambda functions using the script **/deploy/lambda.sh**.
-6. Next, create a new API Gateway endpoint and wire up the Lambda functions. [Coming Soon, Swagger File]
+6. Next, create a new API Gateway endpoint and wire up the Lambda functions.
   - *ENDPOINT/data* -> GET -> Query String Parameters (timestamp) -> readSBSData lambda function.
   - *ENDPOINT/fleet* -> GET -> getSBSFleet lambda function.
   - *ENDPOINT/{sbsid}* -> GET -> getSBSFleet lambda function.
@@ -136,20 +138,8 @@ Installing the software
 
 7. Run python SBS.py to start the application.
 
-Kegerator Setup
-==================
-
-Included in this respository is the 3D printable .stl files. Bring these files to your favourite 3D printer (or print them yourself!) and build the SBS compute unit.
-
-1. Once the compute unit has been created, attach it to the top of your kegerator tower. Drop the wires for the flow sensor and the digital humidity and temperature sensor down the tower into the fridge.
-2. Ensure you have two couplers for your flow meter, and they are the right size for the line in your kegerator. If all is good, cut the line from the keg coupler to the tower, attaching each end of the tube to the two small couplers on each end of the flow meter.
-3. Plug in the fridge, and the SBS unit and let it cool down for an hour or so.
-4. Buy a keg and have it shipped to your address. Once it arrives, ensure it is the right kind of beer that you were expecting. Tap the keg by attaching the keg coupler to the keg and put it in the refrigerator.
-5. The flow meter will add resistance to your line, which might mean you have to increase the pressure in the system. However, finding the right pressure is an art. Take a look at Draft Beer Made Easy [2] for more detailed instructions if you are finding your beer is a) pouring really slowly - pressure is too low, or b) you have really foamy beer - pressure is too high.
-
 References
 ==================
 
 [1] [Raspberry Pi Flashing Guide](http://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
-[2] [Draft Beer Made Easy](http://www.draft-beer-made-easy.com/kegeratorgaspressure.html)
