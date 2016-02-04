@@ -53,7 +53,8 @@ GATEWAY_ID = config.get('sbs', 'gateway-id')
 # Thresholds
 THRESHOLDS = {
         "sound": config.get('threshold', 'sound'),
-        "ultrasonic": config.get('threshold', 'ultrasonic')
+        "ultrasonic": config.get('threshold', 'ultrasonic'),
+        "temp": config.get('threshold', 'temp')
     }
 
 # This dictionary holds all of the pin outs for the devices connected to the board.
@@ -67,7 +68,8 @@ PINS = {
         "sound-sensor": config.getint('sensors', 'sound-sensor'),
         "flow-sensor": config.getint('sensors', 'flow-sensor'),
         "ultrasonic-ranger": config.getint('sensors', 'ultrasonic-ranger'),
-        "dht": config.getint('sensors', 'temp-sensor')
+        "dht": config.getint('sensors', 'dht-sensor'),
+        "temp-sensor": config.getint('sensors', 'temp-sensor')
     },
     "buttons": {
         "reset-wifi": config.getint('buttons', 'reset-wifi')

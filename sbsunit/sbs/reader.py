@@ -27,7 +27,7 @@ SBS Reader class reads the sensors on the board and stores them in a local dicti
 """
 class SBSReader(object):
 
-    sensor_buffer = { "temp" : [],"humidity": [],"ultrasonic": [],"flow": [],"sound":[] }
+    sensor_buffer = { "temp" : [], "sound":[] }
 
     # Initialize the class by including the board information.
     def __init__(self, board):
@@ -41,7 +41,7 @@ class SBSReader(object):
             #values['ultrasonic'] = self.board.read_ultrasonic_ranger()
             #values['dht'] = self.board.read_dht()
             Tools.log(str(values))
-            #self.sensor_buffer["temp"].append(int(values['dht'][0]))
+            #self.sensor_buffer["temp"].append(float(values['dht'][0]))
             #self.sensor_buffer["humidity"].append(int(values['dht'][1]))
             #self.sensor_buffer["ultrasonic"].append(values['ultrasonic'])
         except IOError, e:
@@ -57,9 +57,11 @@ class SBSReader(object):
             values = {}
             #values['flow'] = self.board.read_flow_sensor()
             values['sound'] = self.board.read_sound_sensor()
+            values['temp'] = self.board.read_temp_sensor()
             Tools.log(str(values))
             #self.sensor_buffer["flow"].append(values['flow'])
             self.sensor_buffer["sound"].append(values['sound'])
+            self.sensor_buffer["temp"].append(values['temp'])
         except IOError, e:
             Tools.log('I/O Error reading sensors. Exception: %s' % str(e),1)
         except Exception, e:
@@ -71,7 +73,7 @@ class SBSReader(object):
         try:
             sensor_data = { 'sensors': {}, 'recordTimestamp': {} }
             #sensor_data['sensors']['flow'] = sum(self.sensor_buffer['flow'])
-            sensor_data['sensors']['sound'] = statistics.median(self.sensor_buffer['sound'])
+            sensor_data['sensors']['sound'] = statistics.mean(self.sensor_buffer['sound'])
             #sensor_data['sensors']['ultrasonic'] = statistics.median(self.sensor_buffer['ultrasonic'])
             sensor_data['sensors']['temp'] = statistics.mean(self.sensor_buffer['temp'])
             #sensor_data['sensors']['humidity'] = statistics.mean(self.sensor_buffer['humidity'])

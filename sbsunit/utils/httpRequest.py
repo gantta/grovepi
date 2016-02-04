@@ -64,6 +64,7 @@ class HTTPRequest():
         body = json.dumps(data)
 
         Tools.log('Payload: %s' % data)
+        Tools.log('URL: %s' % c.URL)
 
         try:
             c.setopt(pycurl.HTTPHEADER, [('x-api-key: %s' % self.apiKey), 'Content-Type: %s' % self.contentType])
