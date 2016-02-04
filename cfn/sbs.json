@@ -15,7 +15,7 @@
     },
     "Parameters": {
       "RootDomainName": {
-            "Description": "warrantyclaims.co",
+            "Description": "samplesite.com",
             "Type": "String"
       }
     },
