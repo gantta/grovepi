@@ -14,8 +14,8 @@ software license above.
 */
 console.log('Loading event');
 
-var DATA_TABLE = '';
-var UNIT_TABLE = '';
+var DATA_TABLE = 'GrovePi-SBSDataTable-TOPKAL3SHIZO';
+var UNIT_TABLE = 'GrovePi-SBSUnitTable-ZM5492IW4WIM';
 var AWS = require("aws-sdk");
 
 var ddb = new AWS.DynamoDB();

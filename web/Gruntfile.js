@@ -422,7 +422,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('publish', [
     'build',
-    'exec:s3push:grovepiraspberry-sbslogsbucket-x2d0vityyst2:default:us-east-1'
+    'exec:s3push:grovepi-sbslogsbucket-18jfow9cp4kb7:default:us-east-1'
   ]);
 
   grunt.registerTask('test', function (target) {

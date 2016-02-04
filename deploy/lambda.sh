@@ -14,7 +14,6 @@ for i in "${!LAMBDA_FCT_FOLDERS[@]}"; do
       aws lambda update-function-code \
         --function-name "${LAMBDA_FCT_NAMES[$i]}" \
         --zip-file "fileb://./temp/${LAMBDA_FCT_FOLDERS[$i]}.zip" \
-        --profile iot \
         --region us-east-1
     fi
       echo "Skipping this function..."

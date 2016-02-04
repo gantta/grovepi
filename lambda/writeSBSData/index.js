@@ -1,7 +1,7 @@
 console.log('Loading event');
 
 var AWS = require('aws-sdk');
-var DATA_TABLE = '';
+var DATA_TABLE = 'GrovePi-SBSDataTable-TOPKAL3SHIZO';
 var ddb = new AWS.DynamoDB();
 
 exports.handler = function (event, context) {
