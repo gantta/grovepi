@@ -12,32 +12,21 @@ distributed with the accompanying software if such terms are included in the dir
 the accompanying software. Such other license terms will then apply in lieu of the terms of the
 software license above.
 '''
-from sbs.tools import Tools
+from device import Device
 
-class Board(object):
+# Represents an LED on the SBS
 
-    pins = {}
-    default_ip = "127.0.0.1"
-    type = None
+class LED_Bar(Device):
 
-    def __init__(self, pins, thresholds, type):
-        self.pins = pins
-        self.type = type
-        self.thresholds = thresholds
-        Tools.log('Simple Home Monitor v1',2)
-        Tools.log('IP Address: %s' % Tools.get_ip_address(),2)
+    def __init__(self, pin, name):
+        super(LED,self).__init__(pin, 1)
+        pass
 
-    def sbs_messages(message, num):
-        return {
-            0: 'Welcome to\nSimple Home Monitor 1.0',
-            1: 'What a great day\nfor a beer.',
-            2: 'Have a beer on AWS.\n(literally)',
-            3: 'It\'s party time!\nPour a pint.',
-            4: 'Create an SBS!\nwww.simplebeerservice.com'
-        }[num]
+    def blink(self):
+        pass
 
-    def set_type(self, type):
-        self.type = type
+    def on(self):
+        pass
 
-    def get_type(self):
-        return self.type
+    def off(self):
+        pass

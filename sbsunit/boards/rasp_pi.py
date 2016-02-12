@@ -19,7 +19,7 @@ from devices.grove_flow_sensor import GroveFlowSensor
 from devices.sound_sensor import SoundSensor
 from devices.temp_sensor import TempSensor
 from devices.ultrasonic_ranger import UltraSonicRanger
-from devices.grove_led import GroveLED
+from devices.led_bar import GroveLED
 from devices.grove_button import GroveButton
 from sbs.tools import Tools
 from sbs.tools import RGB
@@ -44,6 +44,7 @@ class RaspPi(Board):
         #self.lcd = GroveRGB()
         self.buttons = {}
         self.leds = {}
+        self.led_bar = GroveLED()
         
 '''
         if (pins):
