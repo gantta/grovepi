@@ -137,6 +137,20 @@ Installing the software
 		iface default inet dhcp
 
 7. Run python SBS.py to start the application.
+    Note: python SBS.py --debug to see additional console debug information about your sensor data and payload information.
+
+Troubleshooting
+==================
+
+1. Console output error message when making the post request:
+    {"errorMessage":"Cannot find module 'index'","errorType":"Error","stackTrace":["Function.Module._resolveFilename (module.js:338:15)"
+
+  - I found this issue was related to the way the lambda folders were zipped and uploaded to AWS. The zip file should include only the contents of the associated lambda folders, not the folder itself.
+  - I fixed this issue by zipping the index.js and supporting subfolder from the three subfolders under the lambda folder and manually uploaded the zip files to the respective lambda functions.
+
+2. Console output error message: 
+    "errorMessage":"Process exited before completing request"
+
 
 References
 ==================

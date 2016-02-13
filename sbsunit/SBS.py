@@ -49,6 +49,7 @@ else:
     exit('No config file could be found. Please try running python Setup.py')
 
 GATEWAY_ID = config.get('sbs', 'gateway-id')
+GLOBALS['sbsunit'] = config.get('sbs', 'gateway-id')
 
 # Thresholds
 THRESHOLDS = {

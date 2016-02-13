@@ -27,7 +27,7 @@ SBS Reader class reads the sensors on the board and stores them in a local dicti
 """
 class SBSReader(object):
 
-    sensor_buffer = { "temp" : [], "sound":[] }
+    sensor_buffer = { "sbsid" :[], "temp" :[], "sound":[] }
 
     # Initialize the class by including the board information.
     def __init__(self, board):
@@ -57,9 +57,10 @@ class SBSReader(object):
             values = {}
             #values['flow'] = self.board.read_flow_sensor()
             values['sound'] = self.board.read_sound_sensor()
-            values['temp'] = self.board.read_temp_sensor()
+            values['temp'] = float(self.board.read_temp_sensor())
             Tools.log(str(values))
             #self.sensor_buffer["flow"].append(values['flow'])
+            #self.sensor_buffer["sbsid"].append("SBS001")
             self.sensor_buffer["sound"].append(values['sound'])
             self.sensor_buffer["temp"].append(values['temp'])
         except IOError, e:
@@ -71,7 +72,8 @@ class SBSReader(object):
     def get_sensor_data(self):
         Tools.log("Buffer:"+str(self.sensor_buffer))
         try:
-            sensor_data = { 'sensors': {}, 'recordTimestamp': {} }
+            sensor_data = { 'sbsid': {}, 'sensors': {}, 'recordTimestamp': {} }
+            sensor_data['sbsid'] = "SBS001"
             #sensor_data['sensors']['flow'] = sum(self.sensor_buffer['flow'])
             sensor_data['sensors']['sound'] = statistics.mean(self.sensor_buffer['sound'])
             #sensor_data['sensors']['ultrasonic'] = statistics.median(self.sensor_buffer['ultrasonic'])
