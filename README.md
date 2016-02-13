@@ -150,6 +150,10 @@ Troubleshooting
 
 2. Console output error message: 
     "errorMessage":"Process exited before completing request"
+  - This guy turned out to be a bit more omnimous to troubleshoot. There are a number of different suggestions on forums of troubleshooting this response message, but I found the issue buried in the lambda output logs.
+  - Since I was getting successfull post responses, the lambda function logs were providing me information about js functions unable to convert toString for undefined variables. 
+  - After adding a few more console output writes to the log, I was able to determine the sbsid variable was not getting passed in the event payload.
+  - Making some rudimentary updates to the reader class, I added the SBSID to the post payload and was able to finally get succesful writes to the dynamoDB table.
 
 
 References
