@@ -376,7 +376,7 @@ module.exports = function (grunt) {
     exec: {
       s3push: {
         cmd: function(bucket, profile, region) {
-          return 'aws s3 cp dist/ s3://'+bucket+' --recursive --profile '+profile+' --region '+region;
+          return 'aws s3 cp dist/ s3://' + bucket + ' --recursive --profile ' + profile + ' --region ' + region;
         }
       }
     },

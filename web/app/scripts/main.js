@@ -41,11 +41,11 @@ var VERTICAL_SECTIONS = 6;
 var SMOOTHIE_SPEED = 1000;
 
 // The SBS Units that are displayed on this page.
-// { SBSID: { flow: Timeseries object, sound: Timeseries object, timestamp: Last timestamp since data was updated. } };
+// { SBSID: { sound: Timeseries object, temp: Timeseries object,  recordTimestamp: Last timestamp since data was updated. } };
 var sbsUnits = {};
 
 // Smoothie Chart objects for flow and sound sensor data.
-var flow = null, sound = null;
+var temp = null, sound = null;
 
 // Default colour scheme for the smoothie graph.
 var colors = {
@@ -61,7 +61,7 @@ var timestamp = new Date().getTime();
 /* On page load, init Smoothie graphs */
 
 $( document ).ready(function() {
-  flow = createTimeSeriesGraph("flow");
+  temp = createTimeSeriesGraph("temp");
   sound = createTimeSeriesGraph("sound");
   setInterval(function() {
        refresh();
@@ -84,14 +84,14 @@ $( document ).ready(function() {
        console.log("Creating graph");
        var info = data[sbsID];
        if (sbsUnits[sbsID]===undefined) {
-         sbsUnits[sbsID] = { "flow": new TimeSeries(), "sound": new TimeSeries(), "timestamp": new Date().getTime()};
-         flow.addTimeSeries(sbsUnits[sbsID]["flow"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
+         sbsUnits[sbsID] = { "temp": new TimeSeries(), "sound": new TimeSeries(), "timestamp": new Date().getTime()};
+         temp.addTimeSeries(sbsUnits[sbsID]["temp"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
          sound.addTimeSeries(sbsUnits[sbsID]["sound"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
          $("#legend").append('<div id="legend-' + sbsID + '" class="legend-row">'+
                 '<div class="colorblock" style="background:'+colorToStyle(info.color, 1)+';"><div class="short">'+info.short+'</div></div>'+
                 '<div class="location"><span class="placeholder-title">'+sbsID+'</span>'+info.full+'</div>'+
                 '<div class="dht"><div class="temp"><span class="placeholder-title">TEMP</span><span class="value"></span></div>'+
-                '<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>'+
+                //'<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>'+
                 '</div></div>');
         }
         callback(null, null);
@@ -172,9 +172,9 @@ function update(sbsID, values) {
       },
       function(callback) {
         // Next, add the values for the sensors.
-        if (values.flow!==undefined) {
-            console.log("Flow: ", values.flow);
-            sbsUnits[sbsID]["flow"].append(Date.now(), values.flow);
+        if (values.temp!==undefined) {
+            console.log("Temp: ", values.temp);
+            sbsUnits[sbsID]["temp"].append(Date.now(), values.temp);
         }
         if (values.sound!==undefined) {
             console.log("Sound: ", values.sound);
@@ -183,9 +183,11 @@ function update(sbsID, values) {
         if (values.temp) {
             $("#legend-" + sbsID + " .temp .value").html(values.temp + "°C");
         }
+        /** 
         if (values.humidity) {
             $("#legend-" + sbsID + " .humidity .value").html(values.humidity + "%");
         }
+        */
       }
     ]);
 
