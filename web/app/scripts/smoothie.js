@@ -74,7 +74,9 @@
  * v1.27: Fix bug introduced in v1.26 for non whole number devicePixelRatio values, by @zmbush
  */
 
-;(function(exports) {
+'use strict';
+
+(function(exports) {
 
   var Util = {
     extend: function() {
@@ -85,7 +87,7 @@
         {
           if (arguments[i].hasOwnProperty(key))
           {
-            if (typeof(arguments[i][key]) === 'object') {
+            if (typeof (arguments[i][key]) === 'object') {
               if (arguments[i][key] instanceof Array) {
                 arguments[0][key] = arguments[i][key];
               } else {
@@ -307,11 +309,11 @@
   SmoothieChart.AnimateCompatibility = (function() {
     var requestAnimationFrame = function(callback, element) {
           var requestAnimationFrame =
-            window.requestAnimationFrame        ||
-            window.webkitRequestAnimationFrame  ||
-            window.mozRequestAnimationFrame     ||
-            window.oRequestAnimationFrame       ||
-            window.msRequestAnimationFrame      ||
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
             function(callback) {
               return window.setTimeout(function() {
                 callback(new Date().getTime());
@@ -432,8 +434,9 @@
    */
   SmoothieChart.prototype.resize = function() {
     // TODO this function doesn't handle the value of enableDpiScaling changing during execution
-    if (!this.options.enableDpiScaling || !window || window.devicePixelRatio === 1)
+    if (!this.options.enableDpiScaling || !window || window.devicePixelRatio === 1) {
       return;
+    }
 
     var dpr = window.devicePixelRatio;
     var width = parseInt(this.canvas.getAttribute('width'));
@@ -542,7 +545,7 @@
 
       // Render at least every 1/6th of a second. The canvas may be resized, which there is
       // no reliable way to detect.
-      var maxIdleMillis = Math.min(1000/6, this.options.millisPerPixel);
+      var maxIdleMillis = Math.min(1000 / 6, this.options.millisPerPixel);
 
       if (nowMillis - this.lastRenderTimeMillis < maxIdleMillis) {
         return;
@@ -681,12 +684,12 @@
           context.moveTo(x, y);
         } else {
           switch (chartOptions.interpolation) {
-            case "linear":
-            case "line": {
-              context.lineTo(x,y);
+            case 'linear':
+            case 'line': {
+              context.lineTo(x, y);
               break;
             }
-            case "bezier":
+            case 'bezier':
             default: {
               // Great explanation of Bezier curves: http://en.wikipedia.org/wiki/Bezier_curve#Quadratic_curves
               //
@@ -708,9 +711,9 @@
                 x, y); // endPoint (B)
               break;
             }
-            case "step": {
-              context.lineTo(x,lastY);
-              context.lineTo(x,y);
+            case 'step': {
+              context.lineTo(x, lastY);
+              context.lineTo(x, y);
               break;
             }
           }
@@ -749,10 +752,10 @@
     // Display timestamps along x-axis at the bottom of the chart.
     if (chartOptions.timestampFormatter && chartOptions.grid.millisPerLine > 0) {
       var textUntilX = dimensions.width - context.measureText(minValueString).width + 4;
-      for (var t = time - (time % chartOptions.grid.millisPerLine);
+      for (t = time - (time % chartOptions.grid.millisPerLine);
            t >= oldestValidTime;
            t -= chartOptions.grid.millisPerLine) {
-        var gx = timeToXPixel(t);
+        gx = timeToXPixel(t);
         // Only draw the timestamp if it won't overlap with the previously drawn one.
         if (gx < textUntilX) {
           // Formats the timestamp based on user specified formatting function
@@ -772,7 +775,7 @@
 
   // Sample timestamp formatting function
   SmoothieChart.timeFormatter = function(date) {
-    function pad2(number) { return (number < 10 ? '0' : '') + number }
+    function pad2(number) { return (number < 10 ? '0' : '') + number; }
     return pad2(date.getHours()) + ':' + pad2(date.getMinutes()) + ':' + pad2(date.getSeconds());
   };
 

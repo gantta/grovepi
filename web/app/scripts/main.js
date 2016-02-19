@@ -1,3 +1,7 @@
+/* global TimeSeries */
+/* global SmoothieChart */
+/* global async */
+/* global $ */
 /**
 * GrovePi | FRONT END CODE
 * This code uses AWS API Gateway to query DynamoDB and get the latest sensor data produced
@@ -22,11 +26,12 @@ software license above.
 * POLL_INTERVAL: How often you want to run the AJAX query.
 * --------------------------------------------------------
 */
+'use strict';
 
 /* CONSTANTS */
 // ============ CHANGE THESE VALUES BELOW =============== //
 
-var SBS_ENDPOINT = "https://mdn3e2b7y4.execute-api.us-east-1.amazonaws.com/test";
+var SBS_ENDPOINT = 'https://mdn3e2b7y4.execute-api.us-east-1.amazonaws.com/test';
 var POLL_INTERVAL = 1000;
 
 // ============ REST OF CODE =============== //
@@ -58,139 +63,13 @@ var colors = {
 // Current timestamp
 var timestamp = new Date().getTime();
 
-/* On page load, init Smoothie graphs */
-
-$( document ).ready(function() {
-  temp = createTimeSeriesGraph("temp");
-  sound = createTimeSeriesGraph("sound");
-  setInterval(function() {
-       refresh();
-  }, POLL_INTERVAL);
-});
-
 /* FUNCTIONS */
-
-/**
- * This function adds a new SBS unit to the SBS dictionary. It initializes the timeseries objects in each object.
- * @param {string} sbsID The identifier for the SBS unit
- * @param {Function} callback The callback funciton.
- */
- function addSBSUnit(sbsID, callback) {
-   $.ajax({
-     dataType : 'json',
-     type:"GET",
-     url: SBS_ENDPOINT+sbsID,
-     success: function(data) {
-       console.log("Creating graph");
-       var info = data[sbsID];
-       if (sbsUnits[sbsID]===undefined) {
-         sbsUnits[sbsID] = { "temp": new TimeSeries(), "sound": new TimeSeries(), "timestamp": new Date().getTime()};
-         temp.addTimeSeries(sbsUnits[sbsID]["temp"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
-         sound.addTimeSeries(sbsUnits[sbsID]["sound"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
-         $("#legend").append('<div id="legend-' + sbsID + '" class="legend-row">'+
-                '<div class="colorblock" style="background:'+colorToStyle(info.color, 1)+';"><div class="short">'+info.short+'</div></div>'+
-                '<div class="location"><span class="placeholder-title">'+sbsID+'</span>'+info.full+'</div>'+
-                '<div class="dht"><div class="temp"><span class="placeholder-title">TEMP</span><span class="value"></span></div>'+
-                //'<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>'+
-                '</div></div>');
-        }
-        callback(null, null);
-     },
-     error: function(xhr) {
-        console.error("Could not get SBS Unit Information: | "+xhr);
-        callback(xhr, null);
-     }
-   });
-  }
-
-  /**
-   * Refreshes the data on the graph.
-   */
-function refresh() {
-
-   $.ajax({
-     dataType : 'json',
-     url: SBS_ENDPOINT+"data",
-     data: {"timestamp":timestamp},
-     async: true,
-     success: function(response) {
-       if (typeof response !== 'object') {
-         response = JSON.parse(response);
-       }
-       // Set the timestamp to timestamp of the response. Last successful query.
-       timestamp = response.timestamp;
-
-       if ($.isEmptyObject(response)) {
-         console.log("Empty object");
-       } else {
-         console.log("Not an empty object");
-         for (var key in response.records) {
-           if (response.records.hasOwnProperty(key)) {
-             // Update the smoothie graph.
-             update(response.records[key].sbsID.S,JSON.parse(response.records[key].sensors.S));
-           }
-         }
-
-      }
-     },
-     error: function(xhr) {
-         console.error("Could not get record data: | "+xhr);
-         return null;
-     }
-   });
-}
 
 /**
  * Converts an RBG color array [R,G,B] to a css style.
  */
 function colorToStyle(color, alpha) {
-   return 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ','+alpha+')';
-}
-
-/**
- * Updates the Smoothie graph with the latest timeseries data.
- * @param {string} sbsID The identifier for the SBS unit
- * @param {JSON} values The values returned from the API Gateway request.
- */
-function update(sbsID, values) {
-
-    console.log(sbsID, values);
-
-    if (sbsID===undefined||values===undefined) {
-      console.error("No data.");
-      return;
-    }
-
-    async.series([
-      function(callback) {
-        // First, add the unit if it is not already being displayed.
-        if (sbsUnits[sbsID]===undefined) {
-           addSBSUnit(sbsID, callback);
-        } else {
-          callback(null, null);
-        }
-      },
-      function(callback) {
-        // Next, add the values for the sensors.
-        if (values.temp!==undefined) {
-            console.log("Temp: ", values.temp);
-            sbsUnits[sbsID]["temp"].append(Date.now(), values.temp);
-        }
-        if (values.sound!==undefined) {
-            console.log("Sound: ", values.sound);
-            sbsUnits[sbsID]["sound"].append(Date.now(), values.sound);
-        }
-        if (values.temp) {
-            $("#legend-" + sbsID + " .temp .value").html(values.temp + "°C");
-        }
-        /** 
-        if (values.humidity) {
-            $("#legend-" + sbsID + " .humidity .value").html(values.humidity + "%");
-        }
-        */
-      }
-    ]);
-
+   return 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + alpha + ')';
 }
 
 /**
@@ -202,3 +81,129 @@ function createTimeSeriesGraph(sensor) {
     smoothie.streamTo(document.getElementById(sensor), SMOOTHIE_SPEED);
     return smoothie;
 }
+
+/**
+ * This function adds a new SBS unit to the SBS dictionary. It initializes the timeseries objects in each object.
+ * @param {string} sbsID The identifier for the SBS unit
+ * @param {Function} callback The callback funciton.
+ */
+ function addSBSUnit(sbsID, callback) {
+   $.ajax({
+     dataType: 'json',
+     type: 'GET',
+     url: SBS_ENDPOINT + sbsID,
+     success: function(data) {
+       console.log('Creating graph');
+       var info = data[sbsID];
+       if (sbsUnits[sbsID] === undefined) {
+         sbsUnits[sbsID] = { 'temp': new TimeSeries(), 'sound': new TimeSeries(), 'timestamp': new Date().getTime()};
+         temp.addTimeSeries(sbsUnits[sbsID].temp, { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
+         sound.addTimeSeries(sbsUnits[sbsID].sound, { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
+         $('#legend').append('<div id="legend-' + sbsID + '" class="legend-row">' +
+                '<div class="colorblock" style="background:' + colorToStyle(info.color, 1) + ';"><div class="short">' + info.short + '</div></div>' +
+                '<div class="location"><span class="placeholder-title">' + sbsID + '</span>' + info.full + '</div>' +
+                '<div class="dht"><div class="temp"><span class="placeholder-title">TEMP</span><span class="value"></span></div>' +
+                //'<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>' +
+                '</div></div>');
+        }
+        callback(null, null);
+     },
+     error: function(xhr) {
+        console.error('Could not get SBS Unit Information: | ' + xhr);
+        callback(xhr, null);
+     }
+   });
+}
+
+/**
+ * Updates the Smoothie graph with the latest timeseries data.
+ * @param {string} sbsID The identifier for the SBS unit
+ * @param {JSON} values The values returned from the API Gateway request.
+ */
+function update(sbsID, values) {
+
+    console.log(sbsID, values);
+
+    if (sbsID === undefined || values === undefined) {
+      console.error('No data.');
+      return;
+    }
+
+    async.series([
+      function(callback) {
+        // First, add the unit if it is not already being displayed.
+        if (sbsUnits[sbsID] === undefined) {
+           addSBSUnit(sbsID, callback);
+        } else {
+          callback(null, null);
+        }
+      },
+      function(callback) {
+        // Next, add the values for the sensors.
+        if (values.temp !== undefined) {
+            console.log('Temp: ', values.temp);
+            sbsUnits[sbsID].temp.append(Date.now(), values.temp);
+        }
+        if (values.sound !== undefined) {
+            console.log('Sound: ', values.sound);
+            sbsUnits[sbsID].sound.append(Date.now(), values.sound);
+        }
+        if (values.temp) {
+            $('"#legend-' + sbsID + ' .temp .value"').html(values.temp + '°C');
+        }
+        /**
+        if (values.humidity) {
+            $("#legend-" + sbsID + " .humidity .value").html(values.humidity + "%");
+        }
+        */
+      }
+    ]);
+}
+
+  /**
+   * Refreshes the data on the graph.
+   */
+function refresh() {
+
+   $.ajax({
+     dataType: 'json',
+     url: SBS_ENDPOINT + 'data',
+     data: {'timestamp': timestamp},
+     async: true,
+     success: function(response) {
+       if (typeof response !== 'object') {
+         response = JSON.parse(response);
+       }
+       // Set the timestamp to timestamp of the response. Last successful query.
+       timestamp = response.timestamp;
+
+       if ($.isEmptyObject(response)) {
+         console.log('Empty object');
+       } else {
+         console.log('Not an empty object');
+         for (var key in response.records) {
+           if (response.records.hasOwnProperty(key)) {
+             // Update the smoothie graph.
+             update(response.records[key].sbsID.S, JSON.parse(response.records[key].sensors.S));
+           }
+         }
+
+      }
+     },
+     error: function(xhr) {
+         console.error('Could not get record data: | ' + xhr);
+         return null;
+     }
+   });
+}
+
+
+/* On page load, init Smoothie graphs */
+
+$( document ).ready(function() {
+  temp = createTimeSeriesGraph('temp');
+  sound = createTimeSeriesGraph('sound');
+  setInterval(function() {
+       refresh();
+  }, POLL_INTERVAL);
+});
