@@ -308,26 +308,26 @@
   // Based on http://inspirit.github.com/jsfeat/js/compatibility.js
   SmoothieChart.AnimateCompatibility = (function() {
     var requestAnimationFrame = function(callback, element) {
-          var requestAnimationFrame =
+          var requestAnimationFrameb =
             window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
             window.mozRequestAnimationFrame ||
             window.oRequestAnimationFrame ||
             window.msRequestAnimationFrame ||
-            function(callback) {
+            function(callbackb) {
               return window.setTimeout(function() {
-                callback(new Date().getTime());
+                callbackb(new Date().getTime());
               }, 16);
             };
-          return requestAnimationFrame.call(window, callback, element);
+          return requestAnimationFrameb.call(window, callback, element);
         },
         cancelAnimationFrame = function(id) {
-          var cancelAnimationFrame =
-            window.cancelAnimationFrame ||
-            function(id) {
-              clearTimeout(id);
-            };
-          return cancelAnimationFrame.call(window, id);
+          var cancelAnimationFrameb =
+            window.cancelAnimationFrame || clearTimeout(id);
+            //function(id) {
+              //clearTimeout(id);
+            //};
+          return cancelAnimationFrameb.call(window, id);
         };
 
     return {

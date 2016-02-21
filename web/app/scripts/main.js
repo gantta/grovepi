@@ -130,6 +130,7 @@ function update(sbsID, values) {
     }
 
     async.series([
+      /**
       function(callback) {
         // First, add the unit if it is not already being displayed.
         if (sbsUnits[sbsID] === undefined) {
@@ -138,7 +139,14 @@ function update(sbsID, values) {
           callback(null, null);
         }
       },
+      */
       function(callback) {
+        // First, add the unit if it is not already being displayed.
+        if (sbsUnits[sbsID] === undefined) {
+           addSBSUnit(sbsID, callback);
+        } else {
+          callback(null, null);
+        }
         // Next, add the values for the sensors.
         if (values.temp !== undefined) {
             console.log('Temp: ', values.temp);
