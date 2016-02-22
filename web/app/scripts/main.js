@@ -31,7 +31,7 @@ software license above.
 /* CONSTANTS */
 // ============ CHANGE THESE VALUES BELOW =============== //
 
-var SBS_ENDPOINT = 'https://mdn3e2b7y4.execute-api.us-east-1.amazonaws.com/test';
+var SBS_ENDPOINT = 'https://mdn3e2b7y4.execute-api.us-east-1.amazonaws.com/test/';
 var POLL_INTERVAL = 1000;
 
 // ============ REST OF CODE =============== //

@@ -42,7 +42,7 @@ exports.handler = function(event, context) {
 
   if (event.sbsid === undefined) {
     var params = {
-      TableName: DYNAMO_TABLE,
+      TableName: UNIT_TABLE,
       Limit:50,
       AttributesToGet: ['color','location','full','short','sbs_id']
     };
