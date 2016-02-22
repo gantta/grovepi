@@ -188,10 +188,12 @@ function refresh() {
        if ($.isEmptyObject(response)) {
          console.log('Empty object');
        } else {
-         console.log('Not an empty object');
+         console.log('Not an empty object. Found Something!');
          for (var key in response.records) {
            if (response.records.hasOwnProperty(key)) {
              // Update the smoothie graph.
+             console.log('SBS: ' + response.records[key].sbsID.S);
+             console.log('Sensor: ' + JSON.parse(response.records[key].sensors.S));
              update(response.records[key].sbsID.S, JSON.parse(response.records[key].sensors.S));
            }
          }
