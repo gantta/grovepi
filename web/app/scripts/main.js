@@ -195,6 +195,8 @@ function refresh() {
              console.log('SBS: ' + response.records[key].sbsID.S);
              console.log('Sensor: ' + JSON.parse(response.records[key].sensors.S));
              update(response.records[key].sbsID.S, JSON.parse(response.records[key].sensors.S));
+           } else {
+               console.log('Key has no property');
            }
          }
 
