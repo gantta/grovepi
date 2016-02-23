@@ -190,6 +190,7 @@ function refresh() {
        } else {
          console.log('Not an empty object. Found Something!');
          for (var key in response.records) {
+           console.log('Jumping into the for loop');
            if (response.records.hasOwnProperty(key)) {
              // Update the smoothie graph.
              console.log('SBS: ' + response.records[key].sbsID.S);
