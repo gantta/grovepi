@@ -157,7 +157,7 @@ function update(sbsID, values) {
             sbsUnits[sbsID].sound.append(Date.now(), values.sound);
         }
         if (values.temp) {
-            $('"#legend-' + sbsID + ' .temp .value"').html(values.temp + '°C');
+            $('"#legend-' + sbsID + ' .temp .value"').html(values.temp + '°F');
         }
         /**
         if (values.humidity) {
@@ -173,14 +173,23 @@ function update(sbsID, values) {
    */
 function refresh() {
 
+   console.log('SBS_ENDPOINT: ' + SBS_ENDPOINT + 'data');
+   timestamp = new Date().getTime();
+
    $.ajax({
      dataType: 'json',
      url: SBS_ENDPOINT + 'data',
      data: {'timestamp': timestamp},
+     //data: {'timestamp': ''},
      async: true,
      success: function(response) {
+       console.log('Success function 1.2');
+
        if (typeof response !== 'object') {
+         console.log('Success response! ' + response);
          response = JSON.parse(response);
+       } else {
+         console.log('No love for our response object: ' + response);
        }
        // Set the timestamp to timestamp of the response. Last successful query.
        timestamp = response.timestamp;
@@ -214,6 +223,7 @@ function refresh() {
 /* On page load, init Smoothie graphs */
 
 $( document ).ready(function() {
+  console.log('Beginning page load. Creating time graphs.');
   temp = createTimeSeriesGraph('temp');
   sound = createTimeSeriesGraph('sound');
   setInterval(function() {
