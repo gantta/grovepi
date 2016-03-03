@@ -1,4 +1,7 @@
 .DS_Store
+<<<<<<< HEAD
 ./sbsunit/sbs.cfg
 sbs.cfg
 uuid
+=======
+>>>>>>> refs/remotes/origin/master

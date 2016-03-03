@@ -15,7 +15,11 @@ software license above.
 console.log('Loading event');
 
 var AWS = require('aws-sdk');
+<<<<<<< HEAD
 var UNIT_TABLE = 'GrovePi-SBSUnitTable-ZM5492IW4WIM';
+=======
+var UNIT_TABLE = '';
+>>>>>>> refs/remotes/origin/master
 var db = new AWS.DynamoDB();
 
 function sbsJSONParse(items) {
@@ -42,7 +46,11 @@ exports.handler = function(event, context) {
 
   if (event.sbsid === undefined) {
     var params = {
+<<<<<<< HEAD
       TableName: UNIT_TABLE,
+=======
+      TableName: DYNAMO_TABLE,
+>>>>>>> refs/remotes/origin/master
       Limit:50,
       AttributesToGet: ['color','location','full','short','sbs_id']
     };

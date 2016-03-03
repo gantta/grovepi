@@ -64,7 +64,10 @@ class HTTPRequest():
         body = json.dumps(data)
 
         Tools.log('Payload: %s' % data)
+<<<<<<< HEAD
         Tools.log('URL: %s' % c.URL)
+=======
+>>>>>>> refs/remotes/origin/master
 
         try:
             c.setopt(pycurl.HTTPHEADER, [('x-api-key: %s' % self.apiKey), 'Content-Type: %s' % self.contentType])

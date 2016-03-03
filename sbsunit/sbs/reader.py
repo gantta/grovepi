@@ -27,7 +27,11 @@ SBS Reader class reads the sensors on the board and stores them in a local dicti
 """
 class SBSReader(object):
 
+<<<<<<< HEAD
     sensor_buffer = { "sbsid" :[], "temp" :[], "sound":[] }
+=======
+    sensor_buffer = { "temp" : [],"humidity": [],"ultrasonic": [],"flow": [],"sound":[] }
+>>>>>>> refs/remotes/origin/master
 
     # Initialize the class by including the board information.
     def __init__(self, board):
@@ -38,12 +42,21 @@ class SBSReader(object):
     def read_once(self):
         try:
             values = {}
+<<<<<<< HEAD
             #values['ultrasonic'] = self.board.read_ultrasonic_ranger()
             #values['dht'] = self.board.read_dht()
             Tools.log(str(values))
             #self.sensor_buffer["temp"].append(float(values['dht'][0]))
             #self.sensor_buffer["humidity"].append(int(values['dht'][1]))
             #self.sensor_buffer["ultrasonic"].append(values['ultrasonic'])
+=======
+            values['ultrasonic'] = self.board.read_ultrasonic_ranger()
+            values['dht'] = self.board.read_dht()
+            Tools.log(str(values))
+            self.sensor_buffer["temp"].append(int(values['dht'][0]))
+            self.sensor_buffer["humidity"].append(int(values['dht'][1]))
+            self.sensor_buffer["ultrasonic"].append(values['ultrasonic'])
+>>>>>>> refs/remotes/origin/master
         except IOError, e:
             Tools.log('I/O Error reading sensors. Exception: %s' % str(e),1)
         except Exception, e:
@@ -55,6 +68,7 @@ class SBSReader(object):
     def read(self):
         try:
             values = {}
+<<<<<<< HEAD
             #values['flow'] = self.board.read_flow_sensor()
             values['sound'] = self.board.read_sound_sensor()
             values['temp'] = float(self.board.read_temp_sensor())
@@ -63,6 +77,13 @@ class SBSReader(object):
             #self.sensor_buffer["sbsid"].append("SBS001")
             self.sensor_buffer["sound"].append(values['sound'])
             self.sensor_buffer["temp"].append(values['temp'])
+=======
+            values['flow'] = self.board.read_flow_sensor()
+            values['sound'] = self.board.read_sound_sensor()
+            Tools.log(str(values))
+            self.sensor_buffer["flow"].append(values['flow'])
+            self.sensor_buffer["sound"].append(values['sound'])
+>>>>>>> refs/remotes/origin/master
         except IOError, e:
             Tools.log('I/O Error reading sensors. Exception: %s' % str(e),1)
         except Exception, e:
@@ -72,6 +93,7 @@ class SBSReader(object):
     def get_sensor_data(self):
         Tools.log("Buffer:"+str(self.sensor_buffer))
         try:
+<<<<<<< HEAD
             sensor_data = { 'sbsid': {}, 'sensors': {}, 'recordTimestamp': {} }
             sensor_data['sbsid'] = "SBS001"
             #sensor_data['sensors']['flow'] = sum(self.sensor_buffer['flow'])
@@ -79,6 +101,14 @@ class SBSReader(object):
             #sensor_data['sensors']['ultrasonic'] = statistics.median(self.sensor_buffer['ultrasonic'])
             sensor_data['sensors']['temp'] = statistics.mean(self.sensor_buffer['temp'])
             #sensor_data['sensors']['humidity'] = statistics.mean(self.sensor_buffer['humidity'])
+=======
+            sensor_data = { 'sensors': {}, 'recordTimestamp': {} }
+            sensor_data['sensors']['flow'] = sum(self.sensor_buffer['flow'])
+            sensor_data['sensors']['sound'] = statistics.median(self.sensor_buffer['sound'])
+            sensor_data['sensors']['ultrasonic'] = statistics.median(self.sensor_buffer['ultrasonic'])
+            sensor_data['sensors']['temp'] = statistics.mean(self.sensor_buffer['temp'])
+            sensor_data['sensors']['humidity'] = statistics.mean(self.sensor_buffer['humidity'])
+>>>>>>> refs/remotes/origin/master
             sensor_data['recordTimestamp'] = Tools.now_int_epoch()
             Tools.log("Data to send:"+str(sensor_data))
             GLOBALS['errorCount'] -= 0.5

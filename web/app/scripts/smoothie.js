@@ -74,9 +74,13 @@
  * v1.27: Fix bug introduced in v1.26 for non whole number devicePixelRatio values, by @zmbush
  */
 
+<<<<<<< HEAD
 'use strict';
 
 (function(exports) {
+=======
+;(function(exports) {
+>>>>>>> refs/remotes/origin/master
 
   var Util = {
     extend: function() {
@@ -87,7 +91,11 @@
         {
           if (arguments[i].hasOwnProperty(key))
           {
+<<<<<<< HEAD
             if (typeof (arguments[i][key]) === 'object') {
+=======
+            if (typeof(arguments[i][key]) === 'object') {
+>>>>>>> refs/remotes/origin/master
               if (arguments[i][key] instanceof Array) {
                 arguments[0][key] = arguments[i][key];
               } else {
@@ -308,6 +316,7 @@
   // Based on http://inspirit.github.com/jsfeat/js/compatibility.js
   SmoothieChart.AnimateCompatibility = (function() {
     var requestAnimationFrame = function(callback, element) {
+<<<<<<< HEAD
           var requestAnimationFrameb =
             window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -328,6 +337,28 @@
               //clearTimeout(id);
             //};
           return cancelAnimationFrameb.call(window, id);
+=======
+          var requestAnimationFrame =
+            window.requestAnimationFrame        ||
+            window.webkitRequestAnimationFrame  ||
+            window.mozRequestAnimationFrame     ||
+            window.oRequestAnimationFrame       ||
+            window.msRequestAnimationFrame      ||
+            function(callback) {
+              return window.setTimeout(function() {
+                callback(new Date().getTime());
+              }, 16);
+            };
+          return requestAnimationFrame.call(window, callback, element);
+        },
+        cancelAnimationFrame = function(id) {
+          var cancelAnimationFrame =
+            window.cancelAnimationFrame ||
+            function(id) {
+              clearTimeout(id);
+            };
+          return cancelAnimationFrame.call(window, id);
+>>>>>>> refs/remotes/origin/master
         };
 
     return {
@@ -434,9 +465,14 @@
    */
   SmoothieChart.prototype.resize = function() {
     // TODO this function doesn't handle the value of enableDpiScaling changing during execution
+<<<<<<< HEAD
     if (!this.options.enableDpiScaling || !window || window.devicePixelRatio === 1) {
       return;
     }
+=======
+    if (!this.options.enableDpiScaling || !window || window.devicePixelRatio === 1)
+      return;
+>>>>>>> refs/remotes/origin/master
 
     var dpr = window.devicePixelRatio;
     var width = parseInt(this.canvas.getAttribute('width'));
@@ -545,7 +581,11 @@
 
       // Render at least every 1/6th of a second. The canvas may be resized, which there is
       // no reliable way to detect.
+<<<<<<< HEAD
       var maxIdleMillis = Math.min(1000 / 6, this.options.millisPerPixel);
+=======
+      var maxIdleMillis = Math.min(1000/6, this.options.millisPerPixel);
+>>>>>>> refs/remotes/origin/master
 
       if (nowMillis - this.lastRenderTimeMillis < maxIdleMillis) {
         return;
@@ -684,12 +724,21 @@
           context.moveTo(x, y);
         } else {
           switch (chartOptions.interpolation) {
+<<<<<<< HEAD
             case 'linear':
             case 'line': {
               context.lineTo(x, y);
               break;
             }
             case 'bezier':
+=======
+            case "linear":
+            case "line": {
+              context.lineTo(x,y);
+              break;
+            }
+            case "bezier":
+>>>>>>> refs/remotes/origin/master
             default: {
               // Great explanation of Bezier curves: http://en.wikipedia.org/wiki/Bezier_curve#Quadratic_curves
               //
@@ -711,9 +760,15 @@
                 x, y); // endPoint (B)
               break;
             }
+<<<<<<< HEAD
             case 'step': {
               context.lineTo(x, lastY);
               context.lineTo(x, y);
+=======
+            case "step": {
+              context.lineTo(x,lastY);
+              context.lineTo(x,y);
+>>>>>>> refs/remotes/origin/master
               break;
             }
           }
@@ -752,10 +807,17 @@
     // Display timestamps along x-axis at the bottom of the chart.
     if (chartOptions.timestampFormatter && chartOptions.grid.millisPerLine > 0) {
       var textUntilX = dimensions.width - context.measureText(minValueString).width + 4;
+<<<<<<< HEAD
       for (t = time - (time % chartOptions.grid.millisPerLine);
            t >= oldestValidTime;
            t -= chartOptions.grid.millisPerLine) {
         gx = timeToXPixel(t);
+=======
+      for (var t = time - (time % chartOptions.grid.millisPerLine);
+           t >= oldestValidTime;
+           t -= chartOptions.grid.millisPerLine) {
+        var gx = timeToXPixel(t);
+>>>>>>> refs/remotes/origin/master
         // Only draw the timestamp if it won't overlap with the previously drawn one.
         if (gx < textUntilX) {
           // Formats the timestamp based on user specified formatting function
@@ -775,7 +837,11 @@
 
   // Sample timestamp formatting function
   SmoothieChart.timeFormatter = function(date) {
+<<<<<<< HEAD
     function pad2(number) { return (number < 10 ? '0' : '') + number; }
+=======
+    function pad2(number) { return (number < 10 ? '0' : '') + number }
+>>>>>>> refs/remotes/origin/master
     return pad2(date.getHours()) + ':' + pad2(date.getMinutes()) + ':' + pad2(date.getSeconds());
   };
 

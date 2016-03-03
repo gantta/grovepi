@@ -376,7 +376,11 @@ module.exports = function (grunt) {
     exec: {
       s3push: {
         cmd: function(bucket, profile, region) {
+<<<<<<< HEAD
           return 'aws s3 cp dist/ s3://' + bucket + ' --recursive --profile ' + profile + ' --region ' + region;
+=======
+          return 'aws s3 cp dist/ s3://'+bucket+' --recursive --profile '+profile+' --region '+region;
+>>>>>>> refs/remotes/origin/master
         }
       }
     },
@@ -422,7 +426,11 @@ module.exports = function (grunt) {
 
   grunt.registerTask('publish', [
     'build',
+<<<<<<< HEAD
     'exec:s3push:grovepi-sbslogsbucket-18jfow9cp4kb7:default:us-east-1'
+=======
+    'exec:s3push:<S3_BUCKET>:default:us-west-2'
+>>>>>>> refs/remotes/origin/master
   ]);
 
   grunt.registerTask('test', function (target) {

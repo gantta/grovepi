@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* global TimeSeries */
 /* global SmoothieChart */
 /* global async */
@@ -6,6 +7,12 @@
 * GrovePi | FRONT END CODE
 * This code uses AWS API Gateway to query DynamoDB and get the latest sensor data produced
 * by the GrovePi compute unit.
+=======
+/**
+* SIMPLE BEER SERVICE | FRONT END CODE
+* This code uses AWS API Gateway to query DynamoDB and get the latest sensor data produced
+* by the Simple Beer Service compute unit.
+>>>>>>> refs/remotes/origin/master
 
 Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -26,12 +33,19 @@ software license above.
 * POLL_INTERVAL: How often you want to run the AJAX query.
 * --------------------------------------------------------
 */
+<<<<<<< HEAD
 'use strict';
+=======
+>>>>>>> refs/remotes/origin/master
 
 /* CONSTANTS */
 // ============ CHANGE THESE VALUES BELOW =============== //
 
+<<<<<<< HEAD
 var SBS_ENDPOINT = 'https://mdn3e2b7y4.execute-api.us-east-1.amazonaws.com/test/';
+=======
+var SBS_ENDPOINT = "<YOUR_ENDPOINT_HERE>";
+>>>>>>> refs/remotes/origin/master
 var POLL_INTERVAL = 1000;
 
 // ============ REST OF CODE =============== //
@@ -46,11 +60,19 @@ var VERTICAL_SECTIONS = 6;
 var SMOOTHIE_SPEED = 1000;
 
 // The SBS Units that are displayed on this page.
+<<<<<<< HEAD
 // { SBSID: { sound: Timeseries object, temp: Timeseries object,  recordTimestamp: Last timestamp since data was updated. } };
 var sbsUnits = {};
 
 // Smoothie Chart objects for flow and sound sensor data.
 var temp = null, sound = null;
+=======
+// { SBSID: { flow: Timeseries object, sound: Timeseries object, timestamp: Last timestamp since data was updated. } };
+var sbsUnits = {};
+
+// Smoothie Chart objects for flow and sound sensor data.
+var flow = null, sound = null;
+>>>>>>> refs/remotes/origin/master
 
 // Default colour scheme for the smoothie graph.
 var colors = {
@@ -63,6 +85,7 @@ var colors = {
 // Current timestamp
 var timestamp = new Date().getTime();
 
+<<<<<<< HEAD
 /* FUNCTIONS */
 
 /**
@@ -81,6 +104,19 @@ function createTimeSeriesGraph(sensor) {
     smoothie.streamTo(document.getElementById(sensor), SMOOTHIE_SPEED);
     return smoothie;
 }
+=======
+/* On page load, init Smoothie graphs */
+
+$( document ).ready(function() {
+  flow = createTimeSeriesGraph("flow");
+  sound = createTimeSeriesGraph("sound");
+  setInterval(function() {
+       refresh();
+  }, POLL_INTERVAL);
+});
+
+/* FUNCTIONS */
+>>>>>>> refs/remotes/origin/master
 
 /**
  * This function adds a new SBS unit to the SBS dictionary. It initializes the timeseries objects in each object.
@@ -89,6 +125,7 @@ function createTimeSeriesGraph(sensor) {
  */
  function addSBSUnit(sbsID, callback) {
    $.ajax({
+<<<<<<< HEAD
      dataType: 'json',
      type: 'GET',
      url: SBS_ENDPOINT + sbsID,
@@ -104,15 +141,83 @@ function createTimeSeriesGraph(sensor) {
                 '<div class="location"><span class="placeholder-title">' + sbsID + '</span>' + info.full + '</div>' +
                 '<div class="dht"><div class="temp"><span class="placeholder-title">TEMP</span><span class="value"></span></div>' +
                 //'<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>' +
+=======
+     dataType : 'json',
+     type:"GET",
+     url: SBS_ENDPOINT+sbsID,
+     success: function(data) {
+       console.log("Creating graph");
+       var info = data[sbsID];
+       if (sbsUnits[sbsID]===undefined) {
+         sbsUnits[sbsID] = { "flow": new TimeSeries(), "sound": new TimeSeries(), "timestamp": new Date().getTime()};
+         flow.addTimeSeries(sbsUnits[sbsID]["flow"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
+         sound.addTimeSeries(sbsUnits[sbsID]["sound"], { strokeStyle: colorToStyle(info.color, 1), fillStyle: colorToStyle(info.color, 0.4), lineWidth: 3 });
+         $("#legend").append('<div id="legend-' + sbsID + '" class="legend-row">'+
+                '<div class="colorblock" style="background:'+colorToStyle(info.color, 1)+';"><div class="short">'+info.short+'</div></div>'+
+                '<div class="location"><span class="placeholder-title">'+sbsID+'</span>'+info.full+'</div>'+
+                '<div class="dht"><div class="temp"><span class="placeholder-title">TEMP</span><span class="value"></span></div>'+
+                '<div class="humidity"><span class="placeholder-title">HUMIDITY</span><span class="value"></span></div>'+
+>>>>>>> refs/remotes/origin/master
                 '</div></div>');
         }
         callback(null, null);
      },
      error: function(xhr) {
+<<<<<<< HEAD
         console.error('Could not get SBS Unit Information: | ' + xhr);
         callback(xhr, null);
      }
    });
+=======
+        console.error("Could not get SBS Unit Information: | "+xhr);
+        callback(xhr, null);
+     }
+   });
+  }
+
+  /**
+   * Refreshes the data on the graph.
+   */
+function refresh() {
+
+   $.ajax({
+     dataType : 'json',
+     url: SBS_ENDPOINT+"data",
+     data: {"timestamp":timestamp},
+     async: true,
+     success: function(response) {
+       if (typeof response !== 'object') {
+         response = JSON.parse(response);
+       }
+       // Set the timestamp to timestamp of the response. Last successful query.
+       timestamp = response.timestamp;
+
+       if ($.isEmptyObject(response)) {
+         console.log("Empty object");
+       } else {
+         console.log("Not an empty object");
+         for (var key in response.records) {
+           if (response.records.hasOwnProperty(key)) {
+             // Update the smoothie graph.
+             update(response.records[key].sbsID.S,JSON.parse(response.records[key].sensors.S));
+           }
+         }
+
+      }
+     },
+     error: function(xhr) {
+         console.error("Could not get record data: | "+xhr);
+         return null;
+     }
+   });
+}
+
+/**
+ * Converts an RBG color array [R,G,B] to a css style.
+ */
+function colorToStyle(color, alpha) {
+   return 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ','+alpha+')';
+>>>>>>> refs/remotes/origin/master
 }
 
 /**
@@ -124,21 +229,33 @@ function update(sbsID, values) {
 
     console.log(sbsID, values);
 
+<<<<<<< HEAD
     if (sbsID === undefined || values === undefined) {
       console.error('No data.');
+=======
+    if (sbsID===undefined||values===undefined) {
+      console.error("No data.");
+>>>>>>> refs/remotes/origin/master
       return;
     }
 
     async.series([
+<<<<<<< HEAD
       /**
       function(callback) {
         // First, add the unit if it is not already being displayed.
         if (sbsUnits[sbsID] === undefined) {
+=======
+      function(callback) {
+        // First, add the unit if it is not already being displayed.
+        if (sbsUnits[sbsID]===undefined) {
+>>>>>>> refs/remotes/origin/master
            addSBSUnit(sbsID, callback);
         } else {
           callback(null, null);
         }
       },
+<<<<<<< HEAD
       */
       function(callback) {
         // First, add the unit if it is not already being displayed.
@@ -220,3 +337,35 @@ $( document ).ready(function() {
        refresh();
   }, POLL_INTERVAL);
 });
+=======
+      function(callback) {
+        // Next, add the values for the sensors.
+        if (values.flow!==undefined) {
+            console.log("Flow: ", values.flow);
+            sbsUnits[sbsID]["flow"].append(Date.now(), values.flow);
+        }
+        if (values.sound!==undefined) {
+            console.log("Sound: ", values.sound);
+            sbsUnits[sbsID]["sound"].append(Date.now(), values.sound);
+        }
+        if (values.temp) {
+            $("#legend-" + sbsID + " .temp .value").html(values.temp + "°C");
+        }
+        if (values.humidity) {
+            $("#legend-" + sbsID + " .humidity .value").html(values.humidity + "%");
+        }
+      }
+    ]);
+
+}
+
+/**
+ * Create a new SmootheChart object based on the defined characteristics in the CONSTANTS section.
+ * @param sensor {string} Name of the sensor.
+ */
+function createTimeSeriesGraph(sensor) {
+    var smoothie = new SmoothieChart({ millisPerPixel: MILLIS_PER_PIXEL, maxValueScale: MAX_VAL_SCALE, minValueScale: MIN_VAL_SCALE, grid: { strokeStyle: colors.chartgray.stroke, fillStyle: colors.chartgray.fill, lineWidth: LINE_WIDTH, millisPerLine: MILLIS_PER_LINE, verticalSections: VERTICAL_SECTIONS } });
+    smoothie.streamTo(document.getElementById(sensor), SMOOTHIE_SPEED);
+    return smoothie;
+}
+>>>>>>> refs/remotes/origin/master

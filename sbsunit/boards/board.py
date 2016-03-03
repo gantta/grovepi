@@ -24,12 +24,20 @@ class Board(object):
         self.pins = pins
         self.type = type
         self.thresholds = thresholds
+<<<<<<< HEAD
         Tools.log('Simple Home Monitor v1',2)
+=======
+        Tools.log('Simple Beer Service 4.0',2)
+>>>>>>> refs/remotes/origin/master
         Tools.log('IP Address: %s' % Tools.get_ip_address(),2)
 
     def sbs_messages(message, num):
         return {
+<<<<<<< HEAD
             0: 'Welcome to\nSimple Home Monitor 1.0',
+=======
+            0: 'Welcome to\nSimple Beer Service 4.0',
+>>>>>>> refs/remotes/origin/master
             1: 'What a great day\nfor a beer.',
             2: 'Have a beer on AWS.\n(literally)',
             3: 'It\'s party time!\nPour a pint.',
