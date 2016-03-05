@@ -19,6 +19,7 @@ var UNIT_TABLE = 'GrovePi-SBSUnitTable-ZM5492IW4WIM';
 var db = new AWS.DynamoDB();
 
 function sbsJSONParse(items) {
+  console.log('Parsing Item: ' + items);
   var sbsInfo = {};
   for (i in items) {
     sbsInfo[items[i].sbs_id.S] = {
@@ -40,23 +41,29 @@ function sbsJSONParse(items) {
 
 exports.handler = function(event, context) {
 
+  console.log('Jumping into the exports handler: ' + event);
+  console.log('Event SBSID: ' + event.sbsid);
   if (event.sbsid === undefined) {
+    console.log('Didnt find a sbsid Setting our own params');
     var params = {
       TableName: UNIT_TABLE,
       Limit:50,
-      AttributesToGet: ['color','location','full','short','sbs_id']
+      AttributesToGet: ['color','location','full','short','sbsid']
     };
-
+    
+    console.log('Params: ' + params);
     db.scan(params, function(err, data) {
       if (err) {
         console.log("There was an error.");
         context.fail(err);
       } else {
-        context.succeed(setSBSJson(this.data.Items))
+        console.log('db Scan returned: ' + this.data.items);
+        context.succeed(sbsJSONParse(this.data.Items))
       }
     });
 
   } else {
+    console.log('Found an sbsid');
     var params = {
       TableName: UNIT_TABLE,
       Limit:1,
