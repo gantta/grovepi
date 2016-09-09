@@ -49,11 +49,13 @@ else:
     exit('No config file could be found. Please try running python Setup.py')
 
 GATEWAY_ID = config.get('sbs', 'gateway-id')
+GLOBALS['sbsunit'] = config.get('sbs', 'gateway-id')
 
 # Thresholds
 THRESHOLDS = {
         "sound": config.get('threshold', 'sound'),
-        "ultrasonic": config.get('threshold', 'ultrasonic')
+        "ultrasonic": config.get('threshold', 'ultrasonic'),
+        "temp": config.get('threshold', 'temp')
     }
 
 # This dictionary holds all of the pin outs for the devices connected to the board.
@@ -67,7 +69,9 @@ PINS = {
         "sound-sensor": config.getint('sensors', 'sound-sensor'),
         "flow-sensor": config.getint('sensors', 'flow-sensor'),
         "ultrasonic-ranger": config.getint('sensors', 'ultrasonic-ranger'),
-        "dht": config.getint('sensors', 'temp-sensor')
+        "dht": config.getint('sensors', 'dht-sensor'),
+        "temp-sensor": config.getint('sensors', 'temp-sensor'),
+        "led-bar": config.getint('sensors', 'led-bar')
     },
     "buttons": {
         "reset-wifi": config.getint('buttons', 'reset-wifi')
@@ -148,8 +152,8 @@ if __name__ == '__main__':
     #Init the reader and two AWS writers.
     reader = SBSReader(board)
 
-    board.turn_on_led("green")
-    board.print_to_screen("Collecting Data!", RGB["orange"])
+    #board.turn_on_led("green")
+    #board.print_to_screen("Collecting Data!", RGB["orange"])
 
     # register signal handlers
     signal.signal(signal.SIGTERM, sig_handler)
@@ -159,10 +163,10 @@ if __name__ == '__main__':
     def send_data():
         reader.read_once()
         HTTPRequest.send(reader.getAndClear())
-        board.blink("blue")
+        #board.blink("blue")
 
     # schedule all the callbacks
     tornado.ioloop.PeriodicCallback(send_data, GLOBALS['postInterval']).start()
     tornado.ioloop.PeriodicCallback(reader.read, GLOBALS['pollInterval']).start()
-    tornado.ioloop.PeriodicCallback(board.reset_wifi, GLOBALS['buttonInterval']).start()
+    #tornado.ioloop.PeriodicCallback(board.reset_wifi, GLOBALS['buttonInterval']).start()
     tornado.ioloop.IOLoop.instance().start()

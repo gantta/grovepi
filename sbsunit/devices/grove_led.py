@@ -12,27 +12,34 @@ distributed with the accompanying software if such terms are included in the dir
 the accompanying software. Such other license terms will then apply in lieu of the terms of the
 software license above.
 '''
-from led import LED
 from grovepi import grovepi
 import time
-# Represents an LED on the SBS
 
 BLINK_DURATION = 0.25
 
-class GroveLED(LED):
+# LED Bar methods
+# grovepi.ledBar_init(pin,orientation)
+# grovepi.ledBar_orientation(pin,orientation)
+# grovepi.ledBar_setLevel(pin,level)
+# grovepi.ledBar_setLed(pin,led,state)
+# grovepi.ledBar_toggleLed(pin,led)
+# grovepi.ledBar_setBits(pin,state)
+# grovepi.ledBar_getBits(pin)
 
-    #TODO: Implement this class.
-    def __init__(self, pin, name):
-        super(GroveLED,self).__init__(pin, name)
-        grovepi.pinMode(self.pin, "OUTPUT")
+class GroveLED(object):
 
-    def blink(self):
-        grovepi.digitalWrite(self.pin,1)
-        time.sleep(BLINK_DURATION)
-        grovepi.digitalWrite(self.pin,0)
+    def __init__(self, pin):
+        # ledbar_init(pin,orientation)
+        # orientation: (0 = red to green, 1 = green to red)
+        grovepi.pinMode(self.pin, 1)
+        
+        for i in range(0,11):
+            grovepi.ledBar_setLevel(self.pin, i)
+            time.sleep(.2) 
 
-    def on(self):
-        grovepi.digitalWrite(self.pin,1)
+    def updateLevel(self, level):
+        grovepi.ledBar_setLevel(self.pin, level)
 
     def off(self):
-        grovepi.digitalWrite(self.pin,0)
+        grovepi.ledBar_setLevel(self.pin, 0)
+

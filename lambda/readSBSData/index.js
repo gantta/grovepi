@@ -12,10 +12,10 @@ distributed with the accompanying software if such terms are included in the dir
 the accompanying software. Such other license terms will then apply in lieu of the terms of the
 software license above.
 */
-console.log('Loading event');
+console.log('Loading event v1.1');
 
-var DATA_TABLE = '';
-var UNIT_TABLE = '';
+var DATA_TABLE = 'GrovePi-SBSDataTable-TOPKAL3SHIZO';
+var UNIT_TABLE = 'GrovePi-SBSUnitTable-ZM5492IW4WIM';
 var AWS = require("aws-sdk");
 
 var ddb = new AWS.DynamoDB();
@@ -58,8 +58,8 @@ function getData(time, records, callback) {
 				callback(err, "Error...");
 			}
 			else {
-				//console.log(this.data.Items)
-				//console.log(record.sbsID.S);
+				console.log(this.data.Items)
+				console.log(record.sbsID.S);
 				cache = cache.concat(this.data.Items);
 				inner_callback(err, null);
 
@@ -82,7 +82,7 @@ exports.handler = function(event, context) {
 
 	async.waterfall([
 		function(callback) {
-			console.log("Fetching SBS units.");
+			console.log("Fetching SBS units. v2");
 			var params = {
 				TableName: UNIT_TABLE,
 				Limit:50,
@@ -98,12 +98,12 @@ exports.handler = function(event, context) {
 			})
 		},
 		function(items, callback) {
-			//console.log('Items: ',items);
+			console.log('Items Retrieved: ',items);
 			getData(time, items, callback);
-			//console.log("Back from loop.");
+			console.log("Back from loop.");
 		},
 		function(cache, callback) {
-			//console.log(cache);
+			console.log(cache);
 			response.records = cache
 			response.timestamp = new Date().getTime();
 			context.succeed(response);
